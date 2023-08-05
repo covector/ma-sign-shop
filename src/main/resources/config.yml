@@ -1,0 +1,5 @@
+ExampleSign:
+  world: world
+  coordinate: 0, 0, 0
+  level-cost: 3
+  items: potion:instant_heal:3, golden_apple:2

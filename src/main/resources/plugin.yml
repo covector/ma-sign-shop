@@ -1,0 +1,9 @@
+main: dev.covector.masignshop.SignShopPlugin
+name: MobArenaSignShop
+version: 1.0
+softdepend: [MobArena]
+
+commands:
+   mass:
+      description: Reload MobArena Sign Shop Plugin
+      usage: /<command> reload
