@@ -8,9 +8,10 @@ public class SignInfo
     private final int y;
     private final int z;
     private final int cost;
-    private final String items;
+    private final ItemsWrapper items;
+    private final boolean clearInventory;
 
-    public SignInfo(String name, String world, int x, int y, int z, int cost, String items) {
+    public SignInfo(String name, String world, int x, int y, int z, int cost, ItemsWrapper items, boolean clearInventory) {
         this.name = name;
         this.world = world;
         this.x = x;
@@ -18,6 +19,7 @@ public class SignInfo
         this.z = z;
         this.cost = cost;
         this.items = items;
+        this.clearInventory = clearInventory;
     }
 
     public String getName() {
@@ -44,7 +46,11 @@ public class SignInfo
         return cost;
     }
 
-    public String getItems() {
+    public ItemsWrapper getItems() {
         return items;
+    }
+
+    public boolean isClearInventory() {
+        return clearInventory;
     }
 }

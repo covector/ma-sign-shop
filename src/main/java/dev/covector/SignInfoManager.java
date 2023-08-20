@@ -58,13 +58,12 @@ public class SignInfoManager
 
             int cost = section.getInt("level-cost");
 
-            String items = section.getString("items");
-            if (items == null) {
-                logger.warning("Sign " + key + " is missing items in config.yml!");
-                continue;
-            }
+            boolean hasItems = section.getConfigurationSection("items") != null || section.getString("items") != null;
+            ItemsWrapper itemsWrapped = hasItems ? new ItemsWrapper(section) : null;
 
-            signInfos.add(new SignInfo(key, world, x, y, z, cost, items));
+            boolean clearInv = section.getBoolean("clear-inventory");
+
+            signInfos.add(new SignInfo(key, world, x, y, z, cost, itemsWrapped, clearInv));
         }
     }
 
@@ -82,19 +81,13 @@ public class SignInfoManager
 
         player.setLevel(player.getLevel() - signInfo.getCost());
 
-        if ((signInfo.getItems().startsWith("random(") && signInfo.getItems().endsWith(")"))) {
-            String[] items = signInfo.getItems().substring(7, signInfo.getItems().length() - 1).split(",");
-            int index = random.nextInt(items.length);
-            Thing thing = thingman.parse(items[index].strip());
-            thing.giveTo(player);
-        } else {
-            String[] items = signInfo.getItems().split(",");
-            for (String item : items) {
-                Thing thing = thingman.parse(item.strip());
-                thing.giveTo(player);
-            }
+        if (signInfo.isClearInventory()) {
+            player.getInventory().clear();
         }
-        
+
+        if (signInfo.getItems() != null) {
+            signInfo.getItems().giveItems(player, thingman);
+        }
 
         player.sendMessage(ChatColor.GREEN +"You have bought " + signInfo.getName() + "!");
     }
