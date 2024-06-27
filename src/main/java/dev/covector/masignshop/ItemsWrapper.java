@@ -1,13 +1,11 @@
 package dev.covector.masignshop;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.configuration.ConfigurationSection;
 
 import com.garbagemule.MobArena.things.ThingManager;
 import com.garbagemule.MobArena.things.Thing;
 
-import java.util.Random;
 import java.util.List;
 import java.util.Arrays;
 import java.util.stream.Collectors;

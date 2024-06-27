@@ -1,7 +1,6 @@
 package dev.covector.masignshop;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 import org.bukkit.Bukkit;
 import java.util.logging.Logger;
@@ -11,14 +10,12 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.ChatColor;
 
 import com.garbagemule.MobArena.things.ThingManager;
-import com.garbagemule.MobArena.things.Thing;
 
 public class SignInfoManager
 {
     private final ThingManager thingman;
     private ArrayList<SignInfo> signInfos;
     private final Logger logger;
-    private Random random = new Random();
 
     public SignInfoManager(FileConfiguration customConfig, ThingManager thingman) {
         this.thingman = thingman;
