@@ -7,6 +7,7 @@ Random Sign:
   world: world
   coordinate: 1, 0, 0
   level-cost: 1
+  hard-pity-outcome: outcome1
   items:
     outcome1:
       items: potion:instant_heal, golden_apple:2

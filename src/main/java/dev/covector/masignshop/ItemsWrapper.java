@@ -1,13 +1,16 @@
 package dev.covector.masignshop;
 
 import org.bukkit.entity.Player;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 
 import com.garbagemule.MobArena.things.ThingManager;
 import com.garbagemule.MobArena.things.Thing;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.stream.Collectors;
 import java.util.ArrayList;
 
@@ -16,6 +19,8 @@ public class ItemsWrapper
     private boolean isRandom;
     private List<List<String>> items;
     private List<Double> prob;
+    private int hardPityInd = -1;
+    private HashMap<UUID, Integer> hardPityCount = new HashMap<UUID, Integer>();
 
     public void construct(String items) {
         this.isRandom = false;
@@ -38,6 +43,7 @@ public class ItemsWrapper
         if (section.getConfigurationSection("items") == null) {
             construct(section.getString("items"));
         } else {
+            String hardPityOutcome = section.getString("hard-pity-outcome");
             ConfigurationSection itemsSection = section.getConfigurationSection("items");
             List<String> itemList = new ArrayList<String>();
             List<Double> probList = new ArrayList<Double>();
@@ -45,6 +51,12 @@ public class ItemsWrapper
                 ConfigurationSection subsection = itemsSection.getConfigurationSection(key);
                 itemList.add(subsection.getString("items"));
                 probList.add(subsection.getDouble("prob"));
+                if (hardPityOutcome != null && key.equals(hardPityOutcome)) {
+                    this.hardPityInd = probList.size() - 1;
+                }
+            }
+            if (hardPityOutcome != null && this.hardPityInd == -1) {
+                Bukkit.getServer().getLogger().warning("Hard pity outcome " + hardPityOutcome + " not found in items list!");
             }
             construct(itemList, probList);
         }
@@ -57,6 +69,17 @@ public class ItemsWrapper
             while (rand > prob.get(index) && index < prob.size()) {
                 rand -= prob.get(index);
                 index++;
+            }
+            if (hardPityInd != -1) {
+                if (hardPityInd != index) {
+                    hardPityCount.put(player.getUniqueId(), hardPityCount.getOrDefault(player.getUniqueId(), 0) + 1);
+                } else {
+                    hardPityCount.put(player.getUniqueId(), 0);
+                }
+                if (prob.get(hardPityInd) * hardPityCount.getOrDefault(player.getUniqueId(), 0) >= 1) {
+                    index = hardPityInd;
+                    hardPityCount.put(player.getUniqueId(), 0);
+                }
             }
             giveItems(items.get(index), player, thingman);
         } else {
