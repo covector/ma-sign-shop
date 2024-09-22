@@ -34,4 +34,8 @@ public class SignListener implements Listener
         Location loc = block.getLocation();
         signInfoManager.buy(event.getPlayer(), loc.getWorld().getName(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
     }
+
+    public void unregister() {
+        PlayerInteractEvent.getHandlerList().unregister(this);
+    }
 }

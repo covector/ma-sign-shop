@@ -1,5 +1,9 @@
 package dev.covector.masignshop;
 
+import org.bukkit.entity.Player;
+
+import java.util.List;
+
 public class SignInfo
 {
     private final String name;
@@ -52,5 +56,18 @@ public class SignInfo
 
     public boolean isClearInventory() {
         return clearInventory;
+    }
+
+    public void resetPity(Player player) {
+        if (items != null) {
+            items.resetPity(player);
+        }
+    }
+
+    public ItemsWrapper.ItemStats getStats(Player player) {
+        if (items != null) {
+            items.getStats(player);
+        }
+        return null;
     }
 }

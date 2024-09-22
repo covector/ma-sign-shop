@@ -9,6 +9,10 @@ import com.garbagemule.MobArena.things.ThingManager;
 
 public class SignShopPlugin extends JavaPlugin
 {
+    ArenaStartListener arenaStartListener;
+    SignListener signListener;
+    ItemFrameBreakListener itemFrameBreakListener;
+
     @Override
     public void onEnable() {
         Plugin maplugin = getServer().getPluginManager().getPlugin("MobArena");
@@ -21,16 +25,24 @@ public class SignShopPlugin extends JavaPlugin
 
         ConfigManager configManager = new ConfigManager(this);
         SignInfoManager signInfoManager = new SignInfoManager(configManager.getConfig(), thingman);
-        this.getCommand("mass").setExecutor(new ReloadCommand(configManager, signInfoManager));
+        this.getCommand("mass").setExecutor(new SignShopCommand(configManager, signInfoManager));
         
-        Bukkit.getPluginManager().registerEvents(new SignListener(signInfoManager), this);
-        Bukkit.getPluginManager().registerEvents(new ItemFrameBreakListener(mobarena), this);
-        
+        arenaStartListener = new ArenaStartListener(signInfoManager);
+        signListener = new SignListener(signInfoManager);
+        itemFrameBreakListener = new ItemFrameBreakListener(mobarena);
+        Bukkit.getPluginManager().registerEvents(arenaStartListener, this);
+        Bukkit.getPluginManager().registerEvents(signListener, this);
+        Bukkit.getPluginManager().registerEvents(itemFrameBreakListener, this);
+
         getLogger().info("MobArena Sign Shop Plugin Activated!");
     }
 
     @Override
     public void onDisable() {
+        arenaStartListener.unregister();
+        signListener.unregister();
+        itemFrameBreakListener.unregister();
+
         getLogger().info("MobArena Sign Shop Plugin Deactivated!");
     }
 }

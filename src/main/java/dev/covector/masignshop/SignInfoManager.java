@@ -1,6 +1,7 @@
 package dev.covector.masignshop;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.bukkit.Bukkit;
 import java.util.logging.Logger;
@@ -100,5 +101,35 @@ public class SignInfoManager
 
     private boolean enoughLevel(Player player, SignInfo signInfo) {
         return player.getLevel() >= signInfo.getCost();
+    }
+
+    public void resetPity(Player player) {
+        for (SignInfo signInfo : signInfos) {
+            signInfo.resetPity(player);
+        }
+    }
+
+    public void sendStats(Player of, Player to) {
+        to.sendMessage(ChatColor.YELLOW + "===================================================");
+        to.sendMessage(ChatColor.WHITE + "MobArena Sign Shop Stats:");
+        for (SignInfo signInfo : signInfos) {
+            if (signInfo.getItems() != null) {
+                ItemsWrapper.ItemStats itemStats = signInfo.getItems().getStats(of);
+                if (itemStats != null) {
+                    List<ItemsWrapper.ItemStat> itemStatArray = itemStats.getStats();
+                    if (itemStatArray.isEmpty()) { continue; }
+                    if (itemStatArray.size() == 1) {
+                        to.sendMessage(ChatColor.GREEN + signInfo.getName() + ": " + ChatColor.AQUA + itemStatArray.get(0).toString());
+                    } else {
+                        String hardPityText = itemStats.getPity() > 0 ? " (" + itemStats.getPity() + ")" : "";
+                        to.sendMessage(ChatColor.GREEN + signInfo.getName() + ":" + ChatColor.LIGHT_PURPLE + hardPityText);
+                        for (ItemsWrapper.ItemStat is : itemStatArray) {
+                            to.sendMessage("    - " + ChatColor.AQUA + is.toString());
+                        }
+                    }
+                }
+            }
+        }
+        to.sendMessage(ChatColor.YELLOW + "===================================================");
     }
 }

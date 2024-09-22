@@ -57,4 +57,9 @@ public class ItemFrameBreakListener implements Listener
         Arena arena = mobarena.getArenaMaster().getArenaAtLocation(loc);
         return arena != null && arena.isRunning();
     }
+
+    public void unregister() {
+        HangingBreakByEntityEvent.getHandlerList().unregister(this);
+        EntityDamageByEntityEvent.getHandlerList().unregister(this);
+    }
 }
